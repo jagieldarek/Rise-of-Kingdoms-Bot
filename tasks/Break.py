@@ -3,6 +3,7 @@ import traceback
 from tasks.Task import Task
 from tasks.constants import TaskName
 
+import random
 import time
 
 
@@ -11,12 +12,15 @@ class Break(Task):
         super().__init__(bot)
 
     def do(self, next_task = TaskName.COLLECTING):
+        min_value_break = self.bot.config.breakTime * 0.85
+        max_value_break = self.bot.config.breakTime * 1.15
+        break_time = random.uniform(min_value_break, max_value_break)
         try:
             super().set_text(title='Break', remove=True)
             super().set_text(insert='Init View')
             super().call_idle_back()
             super().heal_troops()
-            super().set_text(insert='0/{} seconds'.format(self.bot.config.breakTime))
+            super().set_text(insert='0/{} seconds'.format(break_time))
             super().back_to_home_gui()
             super().home_gui_full_view()
 
@@ -25,10 +29,10 @@ class Break(Task):
                 super().stopRok()
 
             count = 0
-            for i in range(self.bot.config.breakTime):
+            for i in range(break_time):
                 time.sleep(1)
                 count = count + 1
-                super().set_text(replace='{}/{} seconds'.format(count, self.bot.config.breakTime), index=0)
+                super().set_text(replace='{}/{} seconds'.format(count, break_time), index=0)
             return next_task
         except Exception as e:
             traceback.print_exc()

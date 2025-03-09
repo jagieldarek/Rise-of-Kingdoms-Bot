@@ -12,6 +12,7 @@ from datetime import datetime
 from utils import aircv_rectangle_to_box, stop_thread
 from enum import Enum
 
+import random
 import config
 import traceback
 import time
@@ -313,6 +314,51 @@ class Task:
         for i in range(times):
             self.device.shell(cmd)
             time.sleep(duration / 1000 + 0.2)
+    
+    def random_swipes(self):
+        end_time = time.time() + random.randint(7,36)
+        screen_width = 1080
+        screen_height = 720
+
+        while time.time() < end_time:
+            self.zoom
+            x_f = random.randint(0, screen_width)
+            y_f = random.randint(0, screen_height)
+            x_t = random.randint(0, screen_width)
+            y_t = random.randint(0, screen_height)
+            duration = random.randint(200, 1000)
+            self.swipe(x_f, y_f, x_t, y_t, duration)
+    
+    def random_zoom(self):
+        end_time = time.time() + random.randint(10,28);
+        screen_width = 1280  
+        screen_height = 720
+
+        while time.time() < end_time:
+            x_f = random.randint(0, screen_width)
+            y_f = random.randint(0, screen_height)
+            x_t = random.randint(0, screen_width)
+            y_t = random.randint(0, screen_height)
+            random_zoom_type = random.choice(["in", "out"])
+            self.zoom(x_f, y_f, x_t, y_t, zoom_type=random_zoom_type)
+
+    def random_tap(self):
+        end_time = time.time() + random.randint(1,4);
+        screen_width = 1280  
+        screen_height = 720
+        while time.time() < end_time:
+            x = random.randint(0, screen_width)
+            y = random.randint(0, screen_height)
+            sleep_times = [0.1, 0.2, 0.3, 0.4, 0.5]
+            random_sleep_time = random.choice(sleep_times)
+            self.tap(x, y, random_sleep_time)
+
+    def generate_random_moves(self):
+        num_moves = random.randint(3, 10)
+        moves = [self.random_swipes, self.random_zoom, self.random_tap()] * (num_moves // 2 + 1)
+        random.shuffle(moves)
+        for move in moves[:num_moves]:
+            move()
 
     def zoom(self, x_f, y_f, x_t, y_t, times=1, duration=300, zoom_type="out"):
         cmd_hold = "input swipe {} {} {} {} {}".format(

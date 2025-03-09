@@ -15,7 +15,7 @@ class GatherResource(Task):
     def do(self, next_task=TaskName.BREAK):
         magnifier_pos = (60, 540)
         self.set_text(title='Gather Resource', remove=True)
-        self.call_idle_back()
+        #self.call_idle_back()
 
         if self.bot.config.useGatheringBoosts:
             b_buff_props = BuffsImageAndProps.ENHANCED_GATHER_BLUE.value
@@ -43,6 +43,7 @@ class GatherResource(Task):
             self.back_to_map_gui()
             resourse_code = self.get_min_resource()
             self.back_to_map_gui()
+            self.generate_random_moves()
 
             if resourse_code == Resource.FOOD.value:
                 chose_icon_pos = resource_icon_pos[0]
