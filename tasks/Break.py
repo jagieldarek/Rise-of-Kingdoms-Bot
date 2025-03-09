@@ -12,9 +12,10 @@ class Break(Task):
         super().__init__(bot)
 
     def do(self, next_task = TaskName.COLLECTING):
-        min_value_break = self.bot.config.breakTime * 0.85
-        max_value_break = self.bot.config.breakTime * 1.15
-        break_time = random.uniform(min_value_break, max_value_break)
+        min_value_break = int(round(self.bot.config.breakTime * 0.85))
+        max_value_break = int(round(self.bot.config.breakTime * 1.15))
+        break_time = random.randint(min_value_break, max_value_break)
+
         try:
             super().set_text(title='Break', remove=True)
             super().set_text(insert='Init View')

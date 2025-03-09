@@ -317,17 +317,15 @@ class Task:
     
     def random_swipes(self):
         end_time = time.time() + random.randint(7,36)
-        screen_width = 1080
+        screen_width = 1280
         screen_height = 720
 
         while time.time() < end_time:
-            self.zoom
             x_f = random.randint(0, screen_width)
             y_f = random.randint(0, screen_height)
             x_t = random.randint(0, screen_width)
             y_t = random.randint(0, screen_height)
-            duration = random.randint(200, 1000)
-            self.swipe(x_f, y_f, x_t, y_t, duration)
+            self.swipe(x_f, y_f, x_t, y_t, times=random.randint(1,100), duration=5)
     
     def random_zoom(self):
         end_time = time.time() + random.randint(10,28);
@@ -355,7 +353,7 @@ class Task:
 
     def generate_random_moves(self):
         num_moves = random.randint(3, 10)
-        moves = [self.random_swipes, self.random_zoom, self.random_tap()] * (num_moves // 2 + 1)
+        moves = [self.random_zoom, self.random_tap] * (num_moves // 2 + 1)
         random.shuffle(moves)
         for move in moves[:num_moves]:
             move()

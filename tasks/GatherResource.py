@@ -41,9 +41,9 @@ class GatherResource(Task):
         try:
             chose_icon_pos = resource_icon_pos[0]
             self.back_to_map_gui()
+            self.generate_random_moves()
             resourse_code = self.get_min_resource()
             self.back_to_map_gui()
-            self.generate_random_moves()
 
             if resourse_code == Resource.FOOD.value:
                 chose_icon_pos = resource_icon_pos[0]
