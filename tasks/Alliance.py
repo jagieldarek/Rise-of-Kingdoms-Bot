@@ -1,5 +1,6 @@
 import traceback
 import random
+import time
 
 from filepath.file_relative_paths import ImagePathAndProps
 from tasks.Task import Task
@@ -32,6 +33,7 @@ class Alliance(Task):
             random.shuffle(tasks)
             for task in tasks:
                 task()
+                time.sleep(random.uniform(1.81, 2.79))
                 self.back(1)
         except Exception as e:
             traceback.print_exc()
@@ -101,3 +103,4 @@ class Alliance(Task):
                     super().tap(x, y, 0.03)
         else:
             super().set_text(insert="Cannot found Officer's Recommendation")
+        self.back(1)
