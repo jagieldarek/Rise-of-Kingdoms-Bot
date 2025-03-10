@@ -1,4 +1,5 @@
 import traceback
+import random
 
 from filepath.constants import MAP
 from filepath.file_relative_paths import BuffsImageAndProps, ItemsImageAndProps, ImagePathAndProps
@@ -15,7 +16,6 @@ class GatherResource(Task):
     def do(self, next_task=TaskName.BREAK):
         magnifier_pos = (60, 540)
         self.set_text(title='Gather Resource', remove=True)
-        self.call_idle_back()
 
         if self.bot.config.useGatheringBoosts:
             b_buff_props = BuffsImageAndProps.ENHANCED_GATHER_BLUE.value
@@ -40,7 +40,9 @@ class GatherResource(Task):
         ]
         try:
             chose_icon_pos = resource_icon_pos[0]
-            self.back_to_map_gui()
+            self.back_to_home_gui()
+            self.back_to_map_gui
+            self.generate_random_swipes()
             resourse_code = self.get_min_resource()
             self.back_to_map_gui()
 
@@ -94,19 +96,25 @@ class GatherResource(Task):
 
                 # decreasing level
                 if should_decreasing_lv:
+                    sleep_times = [0.3, 0.4, 0.5, 0.6, 0.7]
+                    random_sleep_time = random.choice(sleep_times)
                     self.set_text(insert="Decreasing level by 1")
-                    self.tap(dec_pos[0], dec_pos[1], 0.3)
+                    self.tap(dec_pos[0], dec_pos[1], random_sleep_time, long_press_duration=random.randint(300,500))
 
                 for j in range(5):
                     self.tap(search_pos[0], search_pos[1], 2)
                     is_found, _, _ = self.gui.check_any(ImagePathAndProps.RESOURCE_SEARCH_BUTTON_IMAGE_PATH.value)
                     if not is_found:
                         break
+                    sleep_times = [0.3, 0.4, 0.5, 0.6, 0.7]
+                    random_sleep_time = random.choice(sleep_times)
                     self.set_text(insert="Not found, decreasing level by 1 [{}]".format(j))
-                    self.tap(dec_pos[0], dec_pos[1], 0.3)
+                    self.tap(dec_pos[0], dec_pos[1], random_sleep_time, long_press_duration=random.randint(300,500))
 
                 self.set_text(insert="Resource found")
-                self.tap(640, 320, 0.5)
+                sleep_times = [0.5, 0.6, 0.7, 0.8, 0.9]
+                random_sleep_time = random.choice(sleep_times)
+                self.tap(random.randint(601,637), random.randint(300, 330), random_sleep_time, long_press_duration=random.randint(300,600))
 
                 # check is same pos
                 new_resource_pos = self.gui.resource_location_image_to_string()
@@ -126,6 +134,8 @@ class GatherResource(Task):
                 pos = self.gui.check_any(ImagePathAndProps.NEW_TROOPS_BUTTON_IMAGE_PATH.value)[2]
                 if pos is None:
                     self.set_text(insert="Not more space for march")
+                    self.back(random_sleep_time)
+                    self.generate_random_swipes()
                     return next_task
                 new_troops_button_pos = pos
                 self.tap(new_troops_button_pos[0], new_troops_button_pos[1], 2)
@@ -144,7 +154,9 @@ class GatherResource(Task):
         return next_task
 
     def get_min_resource(self):
-        self.tap(725, 20, 1)
+        rss_x_postions = random.randint(680, 1129)
+        rss_y_postion = random.randint(3, 39)
+        self.tap(rss_x_postions, rss_y_postion, 1)
         result = self.gui.resource_amount_image_to_string()
         self.set_text(
             insert="\nFood: {}\nWood: {}\nStone: {}\nGold: {}\n".format(result[0], result[1], result[2], result[3]))

@@ -12,6 +12,7 @@ from datetime import datetime
 from utils import aircv_rectangle_to_box, stop_thread
 from enum import Enum
 
+import random
 import config
 import traceback
 import time
@@ -268,18 +269,18 @@ class Task:
         else:
             return False
 
-        items_icon_pos = (930, 675)
-        use_btn_pos = (980, 600)
+        items_icon_pos = (random.randint(810,850), random.randint(650,690))
+        use_btn_pos = (random.randint(910,1050), random.randint(600,650))
 
         for item_img_props in item_img_props_list:
             path, size, box, threshold, least_diff, tab_name = item_img_props
 
             tabs_pos = {
-                RESOURCES: (250, 80),
-                SPEEDUPS: (435, 80),
-                BOOSTS: (610, 80),
-                EQUIPMENT: (790, 80),
-                OTHER: (970, 80),
+                RESOURCES: (random.randint(200,310), random.randint(60,100)),
+                SPEEDUPS: (random.randint(380,500), random.randint(60,100)),
+                BOOSTS: (random.randint(570,680), random.randint(60,100)),
+                EQUIPMENT: ((random.randint), random.randint(60,100)),
+                OTHER: (random.randint(940,1050), random.randint(60,100)),
             }
             # open menu
             self.menu_should_open(True)
@@ -307,12 +308,41 @@ class Task:
         self.device.shell(cmd)
         time.sleep(sleep_time)
 
+    # Action
+    def space_button(self, sleep_time=0.5):
+        x = random.randint(15, 25)
+        y = random.randint(690, 710)
+        self.tap(x, y)
+
     # duration is in milliseconds
     def swipe(self, x_f, y_f, x_t, y_t, times=1, duration=300):
         cmd = "input swipe {} {} {} {} {}".format(x_f, y_f, x_t, y_t, duration)
         for i in range(times):
             self.device.shell(cmd)
             time.sleep(duration / 1000 + 0.2)
+    
+    def generate_random_swipes(self):
+        num_moves = random.randint(1, 5)
+        self.set_text(insert="Generate random moves count : {}".format(num_moves))
+        for i in range(num_moves):
+            self.space_button()
+            end_time = time.time() + random.randint(10, 40)
+            screen_width = 1280   
+            screen_height = 720
+            min_x = 100
+            max_x = screen_width - 100
+            min_y = 100
+            max_y = screen_height - 100
+
+            self.set_text(insert='Iteration {} - Moving time: {}'.format(i, end_time - time.time()))
+
+            while time.time() < end_time:
+                x_f = random.randint(min_x, max_x)
+                y_f = random.randint(min_y, max_y)
+                x_t = random.randint(min_x, max_x)
+                y_t = random.randint(min_y, max_y)
+                self.swipe(x_f, y_f, x_t, y_t, times=1, duration=random.randint(500, 800))
+        self.space_button()
 
     def zoom(self, x_f, y_f, x_t, y_t, times=1, duration=300, zoom_type="out"):
         cmd_hold = "input swipe {} {} {} {} {}".format(

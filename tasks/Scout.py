@@ -1,4 +1,6 @@
 import traceback
+import random
+import time
 
 from filepath.file_relative_paths import ImagePathAndProps
 from tasks.constants import TaskName, BuildingNames
@@ -9,25 +11,20 @@ class Scout(Task):
     def __init__(self, bot):
         super().__init__(bot)
 
+    triball_vilages = [random.randint(1000, 1050), random.randint(600,618)]
+    mail_pos = [1130, 670]
+    report_pos = [250, 45]
+    center_pos = (640, 320)
+
     def do(self, next_task=TaskName.BREAK):
 
         try:
             self.set_text(title="Auto Scout")
-            rozwin_liste = [1230, 670]
-            mail_pos = [1130, 670]
-            report_pos = [250, 45]
-            center_pos = (640, 320)
-
             idx = 0
             while self.bot.config.enableInvestigation:
-                self.back_to_map_gui()
-                self.menu_should_open(True)
-                self.set_text(insert="Open mail")
-                x, y = mail_pos
-                self.tap(x, y, 2)
-                self.set_text(insert="Open report")
-                x, y = report_pos
-                self.tap(x, y, 1)
+                self.mail_read_and_claim()
+                self.claim_villages()
+                self.open_mail_and_report()
 
                 found, name, pos = self.gui.check_any(
                     ImagePathAndProps.MAIL_EXPLORATION_REPORT_IMAGE_PATH.value,
@@ -59,7 +56,7 @@ class Scout(Task):
                 else:
                     break
 
-                x, y = center_pos
+                x, y = self.center_pos
                 self.tap(x, y, 0.1)
                 self.tap(x, y, 0.1)
                 self.tap(x, y, 0.1)
@@ -173,3 +170,33 @@ class Scout(Task):
             return next_task
 
         return next_task
+    
+    def mail_read_and_claim(self):
+        self.open_mail_and_report()
+        read_and_claim_x = random.randint(60,200)
+        read_and_claim_y = random.randint(660,670)
+        self.tap(read_and_claim_x, read_and_claim_y)
+        self.tap(random.randint(1100,1200), random.randint(80,150))
+        self.back_to_home_gui()
+        time.sleep(random.uniform(5.5, 7.5))
+
+
+    def open_mail_and_report(self):
+        self.back_to_map_gui()
+        self.menu_should_open(True)
+        self.set_text(insert="Open mail")
+        x, y = self.mail_pos
+        self.tap(x, y, 2)
+        self.set_text(insert="Open report")
+        x, y = self.report_pos
+        self.tap(x, y, 1)
+
+    def claim_villages(self):
+        self.back_to_home_gui()
+        self.home_gui_full_view()
+        self.tap(self.triball_vilages[0], self.triball_vilages[1])
+        time.sleep(random.uniform(1.2, 2.1))
+        self.tap(self.center[0], self.center[1])
+        time.sleep(random.uniform(2.2, 3.1))
+        self.tap(random.randint(540,740), random.randint(630,670))
+        time.sleep(random.uniform(2.1, 3.5))
