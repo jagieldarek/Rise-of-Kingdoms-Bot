@@ -1,5 +1,6 @@
 from tasks.Task import Task
 import traceback
+import random
 
 from tasks.constants import TaskName, BuildingNames
 
@@ -19,7 +20,7 @@ class Collecting(Task):
             super().menu_should_open(False)
 
             x_e, y_e = 105, 125
-            for name in [
+            buildings = [
                 BuildingNames.BARRACKS.value,
                 BuildingNames.ARCHERY_RANGE.value,
                 BuildingNames.STABLE.value,
@@ -29,7 +30,11 @@ class Collecting(Task):
                 BuildingNames.QUARRY.value,
                 BuildingNames.GOLDMINE.value,
                 BuildingNames.ALLIANCE_CENTER.value
-            ]:
+            ]
+
+            random.shuffle(buildings)
+
+            for name in buildings:
                 x, y = self.bot.building_pos[name]
                 self.set_text(insert='tap {} at position ({},{})'.format(name, x, y))
                 self.tap(x, y)

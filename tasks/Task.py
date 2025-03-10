@@ -23,8 +23,6 @@ from random import randrange, uniform
 
 class Task:
 
-    center = (640, 360)
-
     def __init__(self, bot):
         self.bot = bot
         self.device = bot.device
@@ -40,7 +38,7 @@ class Task:
             if commander_pos is not None:
                 x, y = commander_pos
                 self.tap(x - 10, y - 10, 2)
-                x, y = self.center
+                x, y = self.center_position()
                 self.tap(x, y)
                 self.tap(x, y, 1)
             else:
@@ -422,6 +420,14 @@ class Task:
             self.bot.text[text_list].clear()
 
         self.bot.text_update_event(self.bot.text)
+
+    def center_position(self):
+        center_pos = (640, 360) #screen size 1280x720
+        radius = 10
+        x_center, y_center = center_pos
+        x_random = x_center + random.randint(-radius, radius)
+        y_random = y_center + random.randint(-radius, radius)
+        return x_random, y_random
 
     def do(self, next_task):
         return next_task

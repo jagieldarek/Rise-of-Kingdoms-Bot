@@ -1,4 +1,5 @@
 import traceback
+import random
 
 from bot_related.bot_config import TrainingAndUpgradeLevel
 from filepath.file_relative_paths import ImagePathAndProps
@@ -26,7 +27,7 @@ class Training(Task):
                 (1030, 175),
             ]
 
-            for config in [
+            train_configs = [
                 [
                     ImagePathAndProps.BARRACKS_BUTTON_IMAGE_PATH.value,
                     self.bot.config.trainBarracksTrainingLevel,
@@ -55,7 +56,11 @@ class Training(Task):
                     self.bot.building_pos[BuildingNames.SIEGE_WORKSHOP.value],
                     BuildingNames.SIEGE_WORKSHOP.value
                 ]
-            ]:
+            ]
+
+            random.shuffle(train_configs)
+
+            for config in train_configs:
                 super().set_text(insert='Train or upgrade troops({})'.format(config[4]))
                 super().back_to_home_gui()
                 upgraded = False
