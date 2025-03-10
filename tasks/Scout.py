@@ -12,9 +12,8 @@ class Scout(Task):
         super().__init__(bot)
 
     triball_vilages = [random.randint(1000, 1050), random.randint(600,618)]
-    mail_pos = [1130, 670]
-    report_pos = [250, 45]
-    center_pos = (640, 320)
+    mail_pos = [random.randint(1100,1150), random.randint(650,690)]
+    report_pos = [random.randint(200,300), random.randint(23,50)]
 
     def do(self, next_task=TaskName.BREAK):
 
@@ -56,7 +55,7 @@ class Scout(Task):
                 else:
                     break
 
-                x, y = self.center_pos
+                x, y = self.center_postion()
                 self.tap(x, y, 0.1)
                 self.tap(x, y, 0.1)
                 self.tap(x, y, 0.1)
@@ -194,6 +193,7 @@ class Scout(Task):
     def claim_villages(self):
         self.back_to_home_gui()
         self.home_gui_full_view()
+        self.menu_should_open(False)
         self.tap(self.triball_vilages[0], self.triball_vilages[1])
         time.sleep(random.uniform(1.2, 2.1))
         self.tap(self.center[0], self.center[1])
