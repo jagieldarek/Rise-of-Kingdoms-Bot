@@ -38,7 +38,7 @@ class Task:
             if commander_pos is not None:
                 x, y = commander_pos
                 self.tap(x - 10, y - 10, 2)
-                x, y = self.center_postion()
+                x, y = self.center_position()
                 self.tap(x, y)
                 self.tap(x, y, 1)
             else:
@@ -421,7 +421,7 @@ class Task:
 
         self.bot.text_update_event(self.bot.text)
 
-    def center_postion():
+    def center_position(self):
         center_pos = (640, 360) #screen size 1280x720
         radius = 10
         x_center, y_center = center_pos

@@ -55,7 +55,7 @@ class Scout(Task):
                 else:
                     break
 
-                x, y = self.center_postion()
+                x, y = self.center_position()
                 self.tap(x, y, 0.1)
                 self.tap(x, y, 0.1)
                 self.tap(x, y, 0.1)
@@ -191,12 +191,13 @@ class Scout(Task):
         self.tap(x, y, 1)
 
     def claim_villages(self):
+        center_x, center_y = self.center_position()
         self.back_to_home_gui()
         self.home_gui_full_view()
         self.menu_should_open(False)
         self.tap(self.triball_vilages[0], self.triball_vilages[1])
         time.sleep(random.uniform(1.2, 2.1))
-        self.tap(self.center[0], self.center[1])
+        self.tap(center_x, center_y)
         time.sleep(random.uniform(2.2, 3.1))
         self.tap(random.randint(540,740), random.randint(630,670))
         time.sleep(random.uniform(2.1, 3.5))

@@ -14,7 +14,7 @@ class Barbarians(Task):
 
     def do(self, next_task=TaskName.GATHER):
         icon_pos = (255, 640)
-        center_pos = self.center_postion()
+        center_pos = self.center_position()
         queue_one_pos = (1205, 205, 1235, 230)
 
         min_lv = self.bot.config.barbariansMinLevel
