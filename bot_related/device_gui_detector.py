@@ -11,6 +11,7 @@ from enum import Enum
 import traceback
 import numpy as np
 import cv2
+import random
 from bot_related import aircve as aircv
 import io
 
@@ -34,6 +35,7 @@ class GuiName(Enum):
     VERIFICATION_CHEST = 4
     VERIFICATION_VERIFY = 5
     VERIFICATION_CHEST1 = 7
+    LOADING_GAME = 8
     # VERIFICATION_VERIFY_TITLE = 6
     # VERIFICATION_CLOSE_REFRESH_OK = 7
 
@@ -147,7 +149,22 @@ class GuiDetector:
         return result
 
     def match_query_to_string(self):
-        x0, y0, x1, y1 = (1211, 162, 1242, 179)
+        x0, y0, x1, y1 = (1206, 132, 1249, 159)
+
+        try:
+            imsch = cv2.imdecode(np.asarray(self.get_curr_device_screen_img_byte_array(), dtype=np.uint8),
+                                 cv2.IMREAD_COLOR)
+            imsch = cv2.cvtColor(imsch, cv2.COLOR_BGR2GRAY)
+            imsch = imsch[y0:y1, x0:x1]
+            ret, imsch = cv2.threshold(imsch, 215, 255, cv2.THRESH_BINARY)
+            resource_image = Image.fromarray(imsch)
+            result = ''.join(c for c in img_to_string(resource_image) if c.isdigit())
+            return int(result[0]), int(result[1])
+        except Exception as e:
+            return None, None
+    
+    def match_tap_start_to_string(self):
+        x0, y0, x1, y1 = (565, 586, 715, 621)
 
         try:
             imsch = cv2.imdecode(np.asarray(self.get_curr_device_screen_img_byte_array(), dtype=np.uint8),
@@ -208,9 +225,26 @@ class GuiDetector:
                 cv2.waitKey(0)
 
             if result is not None:
-                return True, gui, result['result']
+                return True, gui, self.get_randomized_position(position=result['result'])
 
         return False, None, None
+    
+    def get_randomized_position(self, position, deviation_percent=5):
+        """
+        Adds a random deviation to the position coordinates.
+        
+        :param position: A list [x, y] representing the coordinates of the center.
+        :param deviation_percent: Maximum percentage deviation from each coordinate.
+        :return: The randomized [x, y] position.
+        """
+        x, y = position
+        deviation_x = x * (deviation_percent / 100)
+        deviation_y = y * (deviation_percent / 100)
+        
+        randomized_x = x + random.uniform(-deviation_x, deviation_x)
+        randomized_y = y + random.uniform(-deviation_y, deviation_y)
+        
+        return [randomized_x, randomized_y]
 
     def has_image_props(self, props):
         path, size, box, threshold, least_diff, gui = props

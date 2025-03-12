@@ -19,87 +19,6 @@ class Scout(Task):
 
         try:
             self.set_text(title="Auto Scout")
-            idx = 0
-            while self.bot.config.enableInvestigation:
-                self.mail_read_and_claim()
-                self.claim_villages()
-                self.open_mail_and_report()
-
-                found, name, pos = self.gui.check_any(
-                    ImagePathAndProps.MAIL_EXPLORATION_REPORT_IMAGE_PATH.value,
-                    ImagePathAndProps.MAIL_SCOUT_BUTTON_IMAGE_PATH.value,
-                )
-
-                if found:
-                    if (
-                        name
-                        == ImagePathAndProps.MAIL_EXPLORATION_REPORT_IMAGE_PATH.value[5]
-                    ):
-                        x, y = pos
-                        self.tap(x, y, 2)
-
-                    result_list = self.gui.find_all_image_props(
-                        ImagePathAndProps.MAIL_SCOUT_BUTTON_IMAGE_PATH.value
-                    )
-                    result_list.sort(key=lambda result: result["result"][1])
-
-                    if idx < len(result_list):
-                        x, y = result_list[idx]["result"]
-                        self.tap(x, y, 2)
-                    else:
-                        break
-
-                    x, y = pos
-                    self.tap(x, y, 2)
-
-                else:
-                    break
-
-                x, y = self.center_position()
-                self.tap(x, y, 0.1)
-                self.tap(x, y, 0.1)
-                self.tap(x, y, 0.1)
-                self.tap(x, y, 0.1)
-                self.tap(x, y, 0.5)
-
-                found, name, pos = self.gui.check_any(
-                    ImagePathAndProps.INVESTIGATE_BUTTON_IMAGE_PATH.value,
-                    ImagePathAndProps.GREAT_BUTTON_IMAGE_PATH.value,
-                )
-
-                if found:
-                    x, y = pos
-                    self.tap(x, y, 2)
-                else:
-                    continue
-
-                if name == ImagePathAndProps.INVESTIGATE_BUTTON_IMAGE_PATH.value[5]:
-
-                    found, name, pos = self.gui.check_any(
-                        ImagePathAndProps.SCOUT_IDLE_ICON_IMAGE_PATH.value,
-                        ImagePathAndProps.SCOUT_ZZ_ICON_IMAGE_PATH.value,
-                    )
-
-                    if found:
-                        x, y = pos
-                        self.tap(x - 10, y - 10, 2)
-                    else:
-                        break
-
-                    found, name, pos = self.gui.check_any(
-                        ImagePathAndProps.SCOUT_SEND_BUTTON_IMAGE_PATH.value,
-                    )
-
-                    if found:
-                        x, y = pos
-                        self.tap(x, y, 2)
-                    else:
-                        break
-                else:
-                    continue
-
-                idx = idx + 1
-
             while True:
                 self.set_text(insert="init view")
                 self.back_to_home_gui()
@@ -201,3 +120,85 @@ class Scout(Task):
         time.sleep(random.uniform(2.2, 3.1))
         self.tap(random.randint(540,740), random.randint(630,670))
         time.sleep(random.uniform(2.1, 3.5))
+
+    def investigation(self):
+        idx = 0
+        while self.bot.config.enableInvestigation:
+            self.mail_read_and_claim()
+            self.claim_villages()
+            self.open_mail_and_report()
+
+            found, name, pos = self.gui.check_any(
+                ImagePathAndProps.MAIL_EXPLORATION_REPORT_IMAGE_PATH.value,
+                ImagePathAndProps.MAIL_SCOUT_BUTTON_IMAGE_PATH.value,
+            )
+
+            if found:
+                if (
+                    name
+                    == ImagePathAndProps.MAIL_EXPLORATION_REPORT_IMAGE_PATH.value[5]
+                ):
+                    x, y = pos
+                    self.tap(x, y, 2)
+
+                result_list = self.gui.find_all_image_props(
+                    ImagePathAndProps.MAIL_SCOUT_BUTTON_IMAGE_PATH.value
+                )
+                result_list.sort(key=lambda result: result["result"][1])
+
+                if idx < len(result_list):
+                    x, y = result_list[idx]["result"]
+                    self.tap(x, y, 2)
+                else:
+                    break
+
+                x, y = pos
+                self.tap(x, y, 2)
+
+            else:
+                break
+
+            x, y = self.center_position()
+            self.tap(x, y, 0.1)
+            self.tap(x, y, 0.1)
+            self.tap(x, y, 0.1)
+            self.tap(x, y, 0.1)
+            self.tap(x, y, 0.5)
+
+            found, name, pos = self.gui.check_any(
+                ImagePathAndProps.INVESTIGATE_BUTTON_IMAGE_PATH.value,
+                ImagePathAndProps.GREAT_BUTTON_IMAGE_PATH.value,
+            )
+
+            if found:
+                x, y = pos
+                self.tap(x, y, 2)
+            else:
+                continue
+
+            if name == ImagePathAndProps.INVESTIGATE_BUTTON_IMAGE_PATH.value[5]:
+
+                found, name, pos = self.gui.check_any(
+                    ImagePathAndProps.SCOUT_IDLE_ICON_IMAGE_PATH.value,
+                    ImagePathAndProps.SCOUT_ZZ_ICON_IMAGE_PATH.value,
+                )
+
+                if found:
+                    x, y = pos
+                    self.tap(x - 10, y - 10, 2)
+                else:
+                    break
+
+                found, name, pos = self.gui.check_any(
+                    ImagePathAndProps.SCOUT_SEND_BUTTON_IMAGE_PATH.value,
+                )
+
+                if found:
+                    x, y = pos
+                    self.tap(x, y, 2)
+                else:
+                    break
+            else:
+                continue
+
+            idx = idx + 1

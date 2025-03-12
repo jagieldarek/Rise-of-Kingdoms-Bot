@@ -16,6 +16,7 @@ import random
 import config
 import traceback
 import time
+import os
 
 
 from filepath.constants import RESOURCES, SPEEDUPS, BOOSTS, EQUIPMENT, OTHER, MAP, HOME
@@ -85,6 +86,9 @@ class Task:
     def back_to_home_gui(self):
         loop_count = 0
         gui_name = None
+        choice = random.choice([True, False])
+        if choice:
+            self.generate_random_moves()
         while True:
             result = self.get_curr_gui_name()
             gui_name, info = ["UNKNOW", None] if result is None else result
@@ -175,13 +179,15 @@ class Task:
             self.runOfRoK()
             start = time.time()
             end = start
-            while end - start <= 300 and self.isRoKRunning():
+            while end - start <= 20:
                 result = self.gui.get_curr_gui_name()
-                if result is None:
-                    time.sleep(5)
-                    end = time.time()
-                else:
+                if result == GuiName.HOME.name:
                     break
+                else:
+                    for _ in range(3):
+                        self.tap(random.randint(400,800), random.randint(200, 400))
+                        time.sleep(2)
+                end = time.time()
 
         pos_list = None
         for i in range(0, 1):
@@ -319,28 +325,68 @@ class Task:
             self.device.shell(cmd)
             time.sleep(duration / 1000 + 0.2)
     
-    def generate_random_swipes(self):
-        num_moves = random.randint(1, 5)
+    def generate_random_moves(self, max_number_moves=5, end_time_duration=10.8):        
+        num_moves = random.randint(1, max_number_moves)
         self.set_text(insert="Generate random moves count : {}".format(num_moves))
+        choice = random.choice([True, False])
         for i in range(num_moves):
-            self.space_button()
-            end_time = time.time() + random.randint(10, 40)
-            screen_width = 1280   
-            screen_height = 720
-            min_x = 100
-            max_x = screen_width - 100
-            min_y = 100
-            max_y = screen_height - 100
-
+            end_time = time.time() + random.uniform(2.5, end_time_duration)
             self.set_text(insert='Iteration {} - Moving time: {}'.format(i, end_time - time.time()))
-
+            self.space_button()
+            time.sleep(random.uniform(1.2, 1.8))
             while time.time() < end_time:
-                x_f = random.randint(min_x, max_x)
-                y_f = random.randint(min_y, max_y)
-                x_t = random.randint(min_x, max_x)
-                y_t = random.randint(min_y, max_y)
-                self.swipe(x_f, y_f, x_t, y_t, times=1, duration=random.randint(500, 800))
+                if choice:
+                    self.send_message_chat_kingdom(num_moves)
+                    choice = False
+                else:
+                    screen_width = 1280   
+                    screen_height = 720
+                    min_x = 100
+                    max_x = screen_width - 100
+                    min_y = 100
+                    max_y = screen_height - 100
+                    x_f = random.randint(min_x, max_x)
+                    y_f = random.randint(min_y, max_y)
+                    x_t = random.randint(min_x, max_x)
+                    y_t = random.randint(min_y, max_y)
+                    self.swipe(x_f, y_f, x_t, y_t, times=1, duration=random.randint(500, 800))
         self.space_button()
+        time.sleep(random.uniform(3.1, 7.5))
+
+    def send_message_chat_kingdom(self, num_moves):
+        if num_moves == 1 or num_moves == 5:
+            self.tap(random.randint(139,170), random.randint(650,690))
+            time.sleep(random.uniform(1.2, 2.3))
+            self.tap(random.randint(108,490), random.randint(658,682))
+            time.sleep(random.uniform(1.2, 2.3))
+            text = self.generate_text()
+            self.send_text_via_adb(text)
+            self.back(1)
+            self.back(1)
+            for _ in range(random.randint(1,3)):
+                self.space_button()
+    
+    def send_text_via_adb(self, message):
+        send_text = f'input text "{message}"'
+        self.device.shell(send_text)
+        time.sleep(random.uniform(1.1, 2.5))
+        self.device.shell('input keyevent KEYCODE_ENTER')
+        time.sleep(random.uniform(1.1, 2.5))
+
+    def generate_text(self):
+        # List of words and phrases
+        words = [
+            "kingdom", "the best", "kd", "we will win", "war", "kvk1", "kvk", "join",
+            "hello", "how are you?", "what are you doing today?", "are you at work?",
+            "I'm bored...", "looking for a woman! anyone interested?", "let's start harvesting!", "hi",
+            "cheaup bas", "lilth is fine", "love this game", "game", "love", "1", "2", "4", "3","7","8","9", "5",
+            "location", "where are you"
+        ]
+        # Random number of words (up to 15)
+        word_count = random.randint(1, 5)
+        # Randomly selecting words
+        sentence = " ".join(random.choices(words, k=word_count))
+        return sentence
 
     def zoom(self, x_f, y_f, x_t, y_t, times=1, duration=300, zoom_type="out"):
         cmd_hold = "input swipe {} {} {} {} {}".format(
