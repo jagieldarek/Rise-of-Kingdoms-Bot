@@ -54,28 +54,31 @@ class Alliance(Task):
         treasure = (random.randint(300,420), random.randint(360,460))
         x, y = gifts_pos
         super().tap(x, y, 2)
-
+        time.sleep(random.uniform(0.7, 3.7))
         # collecting rate gifts
         super().set_text(insert='Claim rate gift')
         x, y = rare_pos
         super().tap(x, y, 1)
+        time.sleep(random.uniform(0.7, 3.7))
         for i in range(20):
             _, _, pos = self.gui.check_any(ImagePathAndProps.GIFTS_CLAIM_BUTTON_IMAGE_PATH.value)
             if pos is None:
                 break
             x, y = pos
-            super().tap(x, y, 0.5)
+            super().tap(x, y, random.uniform(0.8, 1.6))
 
         # collecting normal gifts
         super().set_text(insert='Claim normal gift')
         x, y = normal_pos
         super().tap(x, y, 1)
+        time.sleep(random.uniform(0.7, 3.7))
         x, y = claim_all_pos
         super().tap(x, y, 1)
-
+        time.sleep(random.uniform(0.7, 3.7))
         # collecting treasure of white crystal
         x, y = treasure
         super().tap(x, y, 1)
+        time.sleep(random.uniform(0.7, 3.7))
 
     def claim_territory(self):
         super().set_text(insert='Claim resource')
@@ -83,24 +86,28 @@ class Alliance(Task):
         claim_pos = (random.randint(970,1060), random.randint(130,147))
         x, y = territory_pos
         super().tap(x, y, 2)
+        time.sleep(random.uniform(0.7, 3.7))
         x, y = claim_pos
         super().tap(x, y, 1)
-
+        time.sleep(random.uniform(0.7, 3.7))
+    
     def donate_technology(self):
         super().set_text(insert='Donate technology')
         technology_pos = (random.randint(730,780), self.technology_gifts_y)
         x, y = technology_pos
         super().tap(x, y, 5)
+        time.sleep(random.uniform(0.7, 3.7))
         _, _, recommend_image_pos = self.gui.check_any(ImagePathAndProps.TECH_RECOMMEND_IMAGE_PATH.value)
         if recommend_image_pos is not None:
             x, y = recommend_image_pos
             super().tap(x, y + 60, 1)
+            time.sleep(random.uniform(0.7, 3.7))
             _, _, donate_btn_pos = self.gui.check_any(
                 ImagePathAndProps.TECH_DONATE_BUTTON_IMAGE_PATH.value)
             if donate_btn_pos is not None:
                 x, y = donate_btn_pos
                 for i in range(20):
-                    super().tap(x, y, 0.03)
+                    super().tap(x, y, random.uniform(0.7, 1.1))
         else:
             super().set_text(insert="Cannot found Officer's Recommendation")
         self.back(1)
